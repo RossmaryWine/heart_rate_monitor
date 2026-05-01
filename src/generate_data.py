@@ -63,7 +63,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--num-points",
         type=int,
-        default=500,
+        default=5000,
         help="Number of heart-rate readings to generate.",
     )
 
