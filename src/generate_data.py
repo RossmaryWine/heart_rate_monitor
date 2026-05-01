@@ -1,17 +1,18 @@
 import pandas as pd 
 import random
-from pathlib import Path 
+from pathlib import Path
+import argparse
 import csv
 
 def generate_heart_rate_data(
-    output_path: str = "data/heart_rate",
+    output_path: str = "data/heart_rate.csv",
     num_points: int = 5000,
     baseline: int = 78,
     anomaly_chance: float = 0.03
 ) -> None:
     
-    output_file_specific = output_path + str(anomaly_chance) + ".csv"
-    output_file = Path(output_file_specific)
+    #output_file_specific = output_path + str(anomaly_chance) + ".csv"
+    output_file = Path(output_path)
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
     rows = []
@@ -48,5 +49,47 @@ def generate_heart_rate_data(
     print(df.head())
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Generate fake heart-rate data for anomaly detection."
+    )
+
+    parser.add_argument(
+        "--output",
+        default="data/heart_rate.csv",
+        help="Where to save the generated CSV file.",
+    )
+
+    parser.add_argument(
+        "--num-points",
+        type=int,
+        default=500,
+        help="Number of heart-rate readings to generate.",
+    )
+
+    parser.add_argument(
+        "--baseline",
+        type=int,
+        default=78,
+        help="Normal heart-rate baseline.",
+    )
+
+    parser.add_argument(
+        "--anomaly-chance",
+        type=float,
+        default=0.03,
+        help="Chance of a row being an anomaly. Example: 0.03 means 3%%.",
+    )
+
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    generate_heart_rate_data()
+    args = parse_args()
+
+    generate_heart_rate_data(
+        output_path=args.output,
+        num_points=args.num_points,
+        baseline=args.baseline,
+        anomaly_chance=args.anomaly_chance,
+    )
